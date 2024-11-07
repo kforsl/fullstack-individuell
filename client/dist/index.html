@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>HomePage</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <div class="wrapper">
+            <section class="loading">
+                <h1 class="loading__title">Flavorly</h1>
+                <h2 class="loading__slogan">Discover the Art of Taste Crafted by You.</h2>
+            </section>
+
+            <section class="start-page hidden">
+                <nav class="start-page__nav">
+                    <ul class="start-page__nav-list">
+                        <li class="start-page__nav-list-item start-page__nav-list-item--active">Popular</li>
+                        <li class="start-page__nav-list-item">Following</li>
+                    </ul>
+                </nav>
+                <section class="post" id="popularPostContainer"></section>
+                <section class="post hidden" id="followingPostContainer"></section>
+            </section>
+
+            <section class="search-page hidden">
+                <h1>
+                    404 <br />
+                    Search Page<br />
+                    Not Found
+                </h1>
+            </section>
+
+            <section class="add-page hidden">
+                <h1>
+                    404 <br />
+                    Add Page <br />
+                    Not Found
+                </h1>
+            </section>
+
+            <section class="bookmark-page hidden">
+                <h2 class="bookmark-page__title">Recipes</h2>
+                <section class="bookmark__section">
+                    <span class="bookmark__category" id="createdRecipes">
+                        <h3>My Created Recipes</h3>
+                        <img
+                            src="./assets/icons/tabler_chevron-up.svg"
+                            alt="created chevron icon"
+                            id="createdChevron"
+                        />
+                    </span>
+                    <article class="expander" id="createdExpander">
+                        <ul class="bookmark__section-list" id="bookmarkCreated"></ul>
+                    </article>
+                </section>
+                <section class="bookmark__section">
+                    <span class="bookmark__category" id="likedRecipes">
+                        <h3>My Liked Recipes</h3>
+                        <img src="./assets/icons/tabler_chevron-up.svg" alt="liked chevron icon" id="likedChevron" />
+                    </span>
+                    <article class="expander" id="likedExpander">
+                        <ul class="bookmark__section-list" id="bookmarkLiked"></ul>
+                    </article>
+                </section>
+                <section class="bookmark__section">
+                    <span class="bookmark__category" id="savedRecipes">
+                        <h3>My Saved Recipes</h3>
+                        <img src="./assets/icons/tabler_chevron-up.svg" alt="saved chevron icon" id="savedChevron" />
+                    </span>
+                    <article class="expander" id="bookmarkExpander">
+                        <ul class="bookmark__section-list" id="bookmarkSaved"></ul>
+                    </article>
+                </section>
+            </section>
+
+            <section class="profile-page hidden">
+                <header class="profile-page__header">
+                    <img
+                        class="profile-page__hero-image"
+                        src="./assets/todd-quackenbush-x5SRhkFajrA-unsplash.jpg"
+                        alt="image of a kitchen"
+                    />
+                    <section class="profile-page__user-info">
+                        <img class="profile-page__avatar" src="./assets/avatar/Flavorly.jpg" alt="Flavorly avatar" />
+                        <span class="profile-page__">
+                            <h3 class="profile-page__">Flavorly</h3>
+                            <p class="profile-page__">Head Chef</p>
+                        </span>
+                        <button class="profile-page__interaction-btn">Profile settings</button>
+                    </section>
+                </header>
+                <section class="profile-page__about">
+                    <h3 class="profile-page__about-title">About me!</h3>
+                    <p class="profile-page__about-description">
+                        Hello! I’m Flavorly, a Head Chef with a passion for turning fresh ingredients into unforgettable
+                        experiences. With years in the culinary world, I’ve crafted my style around bold, inventive
+                        flavors that bring excitement to every dish, whether it’s a comforting classic or an avant-garde
+                        creation. My recipes are inspired by global cuisines, local markets, and a deep love for the art
+                        of cooking. As a Head Chef, I believe in sharing knowledge, inspiring creativity, and connecting
+                        with people through food. Join me on a journey to explore new techniques, flavors, and the pure
+                        joy of cooking at its finest!
+                    </p>
+                </section>
+
+                <section class="profile-page__recipes">
+                    <h4 class="profile-page__recipes-title">My Created Recipes</h4>
+                    <section class="profile-page__recipes-container" id="profileBookmarkCreated"></section>
+                </section>
+                <section class="profile-page__recipes">
+                    <h4 class="profile-page__recipes-title">My Liked Recipes</h4>
+                    <section class="profile-page__recipes-container" id="profileBookmarkLiked"></section>
+                </section>
+                <section class="profile-page__recipes">
+                    <h4 class="profile-page__recipes-title">My Saved Recipes</h4>
+                    <section class="profile-page__recipes-container" id="profileBookmarkSaved"></section>
+                </section>
+            </section>
+
+            <nav class="navigation hidden">
+                <ul class="navigation__list">
+                    <li class="navigation__list-item" id="navigationHome">
+                        <img class="navigation__item-icon" src="./assets/icons/ant-design_home-filled.svg" alt="Home" />
+                    </li>
+                    <li class="navigation__list-item" id="navigationSearch">
+                        <img class="navigation__item-icon" src="./assets/icons/ic_baseline-search.svg" alt="Search" />
+                    </li>
+                    <li class="navigation__list-item" id="navigationAdd">
+                        <img class="navigation__item-icon" src="./assets/icons/ic_round-plus.svg" alt="Add" />
+                    </li>
+                    <li class="navigation__list-item" id="navigationBookmark">
+                        <img
+                            class="navigation__item-icon"
+                            src="./assets/icons/material-symbols_bookmark.svg"
+                            alt="Recipes"
+                        />
+                    </li>
+                    <li class="navigation__list-item" id="navigationProfile">
+                        <img class="navigation__item-icon" src="./assets/icons/tabler_user-filled.svg" alt="Profile" />
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <script src="./index.js"></script>
+    </body>
+</html>
