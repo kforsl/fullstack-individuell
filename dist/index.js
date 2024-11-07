@@ -350,14 +350,19 @@ function generateCardImages(recipe) {
     return cardImagesContainerEle;
 }
 function generateCardInformation(recipe) {
+    const createdAt = new Date(recipe.createdAt);
     const newPostEle = document.createElement("section");
     newPostEle.classList.add("post__card-information");
     const newTitleEle = document.createElement("h3");
     newTitleEle.textContent = recipe.title;
     newPostEle.appendChild(newTitleEle);
     const newDateEle = document.createElement("p");
-    newDateEle.textContent = `${recipe.createdAt.toString().split("T")[0]}`;
-    console.log(new Date(recipe.createdAt));
+    newDateEle.textContent = `${createdAt.toISOString().split("T")[1].slice(0, 5)} ${createdAt
+        .toISOString()
+        .split("T")[0]
+        .split("-")
+        .reverse()
+        .join("-")} `;
     newPostEle.appendChild(newDateEle);
     return newPostEle;
 }

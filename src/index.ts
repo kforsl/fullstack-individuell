@@ -381,15 +381,20 @@ function generateCardImages(recipe: Recipe): HTMLElement {
     return cardImagesContainerEle;
 }
 function generateCardInformation(recipe: Recipe): HTMLElement {
+    const createdAt = new Date(recipe.createdAt);
     const newPostEle: HTMLElement = document.createElement("section");
     newPostEle.classList.add("post__card-information");
     const newTitleEle: HTMLElement = document.createElement("h3");
     newTitleEle.textContent = recipe.title;
     newPostEle.appendChild(newTitleEle);
     const newDateEle: HTMLElement = document.createElement("p");
-    newDateEle.textContent = `${recipe.createdAt.toString().split("T")[0]}`;
+    newDateEle.textContent = `${createdAt.toISOString().split("T")[1].slice(0, 5)} ${createdAt
+        .toISOString()
+        .split("T")[0]
+        .split("-")
+        .reverse()
+        .join("-")} `;
 
-    console.log(new Date(recipe.createdAt));
     newPostEle.appendChild(newDateEle);
     return newPostEle;
 }
