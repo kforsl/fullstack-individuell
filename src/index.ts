@@ -41,47 +41,37 @@ function addEventListeners(): void {
 // STORE FUNCTIONS
 async function getAllRecipeFromStore(): Promise<Recipe[]> {
     try {
-        const response: Response = await window.fetch(`http://localhost:8080/api/recipe/top`);
+        const response: Response = await window.fetch(`https://kforsl.github.io/recipes-api/data/recipe.json`);
 
         if (!response.ok) {
-            throw "Något gick fel";
-        } else {
-            const data: apiResponse = await response.json();
-            if (!data.success) {
-                throw data.error;
-            } else {
-                const recipes: Recipe[] = data.recipes ? data.recipes : [];
-                return recipes;
-            }
+            throw new Error(`Något gick Fel`);
         }
+
+        const recipes: Recipe[] = await response.json();
+        return recipes;
     } catch (error) {
         console.log(error);
         return [];
     }
 }
 
-async function getRecipeFromStoreById(id: string): Promise<Recipe[]> {
+function getRecipeFromStoreById(id: string): Recipe[] {
     try {
-        const response: Response = await window.fetch(`http://localhost:8080/api/recipe/${id}`);
+        const storeResponse = localStorage.getItem("recipes") as string;
 
-        if (!response.ok) {
-            throw "Något gick fel";
-        } else {
-            const data: apiResponse = await response.json();
-            if (!data.success) {
-                throw data.error;
-            } else {
-                const recipes: Recipe[] = data.recipes ? data.recipes : [];
-                return recipes;
-            }
+        if (storeResponse) {
+            const recipes: Recipe[] = JSON.parse(storeResponse);
+            const recipe = recipes.find((recipe) => recipe._id === id) as Recipe;
+            return [recipe];
         }
+        return [];
     } catch (error) {
         console.log(error);
         return [];
     }
 }
-async function saveLikedRecipeToStore(id: string): Promise<void> {
-    const foundRecipe: Recipe[] = await getRecipeFromStoreById(id);
+function saveLikedRecipeToStore(id: string): void {
+    const foundRecipe: Recipe[] = getRecipeFromStoreById(id);
     const storeResponse = localStorage.getItem("likedRecipes") as string;
     if (storeResponse) {
         const likedRecipesArray: Recipe[] = JSON.parse(storeResponse);
@@ -92,8 +82,8 @@ async function saveLikedRecipeToStore(id: string): Promise<void> {
     localStorage.setItem("likedRecipes", JSON.stringify(foundRecipe));
     generateLikedRecipesCards(foundRecipe);
 }
-async function saveBookmarkedRecipeToStore(id: string): Promise<void> {
-    const foundRecipe: Recipe[] = await getRecipeFromStoreById(id);
+function saveBookmarkedRecipeToStore(id: string): void {
+    const foundRecipe: Recipe[] = getRecipeFromStoreById(id);
     const storeResponse = localStorage.getItem("bookmarkedRecipes") as string;
     if (storeResponse) {
         const bookmarkedRecipesArray: Recipe[] = JSON.parse(storeResponse);
@@ -397,10 +387,9 @@ function generateCardInformation(recipe: Recipe): HTMLElement {
     newTitleEle.textContent = recipe.title;
     newPostEle.appendChild(newTitleEle);
     const newDateEle: HTMLElement = document.createElement("p");
-    newDateEle.textContent = `${recipe.createdAt.toString().split("T")[0]} ${recipe.createdAt
-        .toString()
-        .split("T")[1]
-        .slice(0, 5)}`;
+    newDateEle.textContent = `${recipe.createdAt.toString().split("T")[0]}`;
+
+    console.log(new Date(recipe.createdAt));
     newPostEle.appendChild(newDateEle);
     return newPostEle;
 }
@@ -454,18 +443,8 @@ function generateCardComments(recipe: Recipe): HTMLElement {
                     username: "Flavorly",
                     experienceLevel: "Head Chef",
                     profilePictureUrl: "./assets/avatar/Flavorly.jpg",
-                    numberOfFollowers: 0,
                 },
-                recipe: {
-                    _id: recipe._id,
-                    title: recipe.title,
-                    tags: recipe.tags,
-                    description: recipe.description,
-                    imageUrl: recipe.imageUrl,
-                    createdBy: recipe.createdBy,
-                    createdAt: recipe.createdAt,
-                    numberOfLikes: recipe.likes.length,
-                },
+                recipeId: recipe._id,
             },
         ];
 
@@ -485,11 +464,6 @@ function generateCardComments(recipe: Recipe): HTMLElement {
         h3Ele.textContent = comment.createdBy.username;
         spanEle.appendChild(h3Ele);
 
-        if (comment.createdBy.numberOfFollowers < 0) {
-            const pEle: HTMLElement = document.createElement("p");
-            pEle.textContent = `Followers: ${comment.createdBy.numberOfFollowers.toString()}`;
-            spanEle.appendChild(pEle);
-        }
         cardCommentsEle.appendChild(spanEle);
 
         const commentPEle: HTMLElement = document.createElement("p");

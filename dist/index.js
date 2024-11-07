@@ -32,50 +32,35 @@ function addEventListeners() {
 }
 async function getAllRecipeFromStore() {
     try {
-        const response = await window.fetch(`http://localhost:8080/api/recipe/top`);
+        const response = await window.fetch(`https://kforsl.github.io/recipes-api/data/recipe.json`);
         if (!response.ok) {
-            throw "Något gick fel";
+            throw new Error(`Något gick Fel`);
         }
-        else {
-            const data = await response.json();
-            if (!data.success) {
-                throw data.error;
-            }
-            else {
-                const recipes = data.recipes ? data.recipes : [];
-                return recipes;
-            }
-        }
+        const recipes = await response.json();
+        return recipes;
     }
     catch (error) {
         console.log(error);
         return [];
     }
 }
-async function getRecipeFromStoreById(id) {
+function getRecipeFromStoreById(id) {
     try {
-        const response = await window.fetch(`http://localhost:8080/api/recipe/${id}`);
-        if (!response.ok) {
-            throw "Något gick fel";
+        const storeResponse = localStorage.getItem("recipes");
+        if (storeResponse) {
+            const recipes = JSON.parse(storeResponse);
+            const recipe = recipes.find((recipe) => recipe._id === id);
+            return [recipe];
         }
-        else {
-            const data = await response.json();
-            if (!data.success) {
-                throw data.error;
-            }
-            else {
-                const recipes = data.recipes ? data.recipes : [];
-                return recipes;
-            }
-        }
+        return [];
     }
     catch (error) {
         console.log(error);
         return [];
     }
 }
-async function saveLikedRecipeToStore(id) {
-    const foundRecipe = await getRecipeFromStoreById(id);
+function saveLikedRecipeToStore(id) {
+    const foundRecipe = getRecipeFromStoreById(id);
     const storeResponse = localStorage.getItem("likedRecipes");
     if (storeResponse) {
         const likedRecipesArray = JSON.parse(storeResponse);
@@ -87,8 +72,8 @@ async function saveLikedRecipeToStore(id) {
     localStorage.setItem("likedRecipes", JSON.stringify(foundRecipe));
     generateLikedRecipesCards(foundRecipe);
 }
-async function saveBookmarkedRecipeToStore(id) {
-    const foundRecipe = await getRecipeFromStoreById(id);
+function saveBookmarkedRecipeToStore(id) {
+    const foundRecipe = getRecipeFromStoreById(id);
     const storeResponse = localStorage.getItem("bookmarkedRecipes");
     if (storeResponse) {
         const bookmarkedRecipesArray = JSON.parse(storeResponse);
@@ -371,10 +356,8 @@ function generateCardInformation(recipe) {
     newTitleEle.textContent = recipe.title;
     newPostEle.appendChild(newTitleEle);
     const newDateEle = document.createElement("p");
-    newDateEle.textContent = `${recipe.createdAt.toString().split("T")[0]} ${recipe.createdAt
-        .toString()
-        .split("T")[1]
-        .slice(0, 5)}`;
+    newDateEle.textContent = `${recipe.createdAt.toString().split("T")[0]}`;
+    console.log(new Date(recipe.createdAt));
     newPostEle.appendChild(newDateEle);
     return newPostEle;
 }
@@ -425,18 +408,8 @@ function generateCardComments(recipe) {
                     username: "Flavorly",
                     experienceLevel: "Head Chef",
                     profilePictureUrl: "./assets/avatar/Flavorly.jpg",
-                    numberOfFollowers: 0,
                 },
-                recipe: {
-                    _id: recipe._id,
-                    title: recipe.title,
-                    tags: recipe.tags,
-                    description: recipe.description,
-                    imageUrl: recipe.imageUrl,
-                    createdBy: recipe.createdBy,
-                    createdAt: recipe.createdAt,
-                    numberOfLikes: recipe.likes.length,
-                },
+                recipeId: recipe._id,
             },
         ];
     const cardCommentsEle = document.createElement("section");
@@ -451,11 +424,6 @@ function generateCardComments(recipe) {
         const h3Ele = document.createElement("h3");
         h3Ele.textContent = comment.createdBy.username;
         spanEle.appendChild(h3Ele);
-        if (comment.createdBy.numberOfFollowers < 0) {
-            const pEle = document.createElement("p");
-            pEle.textContent = `Followers: ${comment.createdBy.numberOfFollowers.toString()}`;
-            spanEle.appendChild(pEle);
-        }
         cardCommentsEle.appendChild(spanEle);
         const commentPEle = document.createElement("p");
         commentPEle.textContent = comment.content;
